@@ -5,8 +5,7 @@ document.querySelector("body").innerHTML = `<h1>IoC</h1>`;
 
 class Engine {
   constructor (fuel) {
-    this.fuel = fuel
-    this.name = `${fuel}-powered`
+    this.fuel = fuel;
   }
 
   start = () => {
@@ -20,19 +19,18 @@ class Engine {
 
 class ElectricEngine extends Engine {
   constructor () {
-    super('Electric')
+    super('Electricity')
   }
 }
 
 class Car {
   constructor (engine) {
     this.engine = engine;
-    this.name = 'Test'
   }
 
   driveTo (destination) {
     if (this.engine.start()) {
-    	console.log(`Driving to ${destination}, with an ${this.engine.name} engine`)
+    	console.log(`Driving to ${destination}, engine powered by ${this.engine.fuel}`)
     	return true
     } else {
     	return false
@@ -40,29 +38,26 @@ class Car {
   }
 }
 
-iocContainer.register("fuel", "diesel")
-iocContainer.register("engine", Engine, ["fuel"]);
-iocContainer.register("car", Car, ["engine"])
+iocContainer.registerModule("fuel", "Diesel")
+iocContainer.registerClass("engine", Engine, ["fuel"]);
+iocContainer.registerClass("car", Car, ["engine"])
 
 
 const car1 = iocContainer.resolve("car");
 
-car1.driveTo('The city')
+car1.driveTo('the city')
 
 iocContainer.remove("engine");
 
-iocContainer.register("engine", ElectricEngine)
+iocContainer.registerClass("engine", ElectricEngine)
 
 const car2 = iocContainer.resolve("car");
 
-car2.driveTo('The suburbs')
+car2.driveTo('the suburbs')
 
 iocContainer.remove("fuel")
 iocContainer.remove("engine")
 iocContainer.remove("car")
 
 
-iocContainer.register('test1', Engine, ['test2'])
-iocContainer.register('test2', Engine, ['test1'])
 
-const test1 = iocContainer.resolve('test1');

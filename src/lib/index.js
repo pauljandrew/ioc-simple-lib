@@ -5,11 +5,6 @@ class SimpleIoC {
     console.log("IoC constructor loaded");
     this._iocRegistry = new Map();
     this._logLevel = logLevel;
-
-    this._lifecycleTypes = {
-      TRANSIENT: 'transient',
-      SINGLETON: 'singleton'
-    }
   }
 
   /*******************************/
@@ -17,26 +12,32 @@ class SimpleIoC {
   /*******************************/
 
   /**
-   * @param  {string}
-   * @param  {string}
-   * @param  {Array}
+   * @since 0.1
+   * @param  {string} The keyname of the module to be registered
+   * @param  {string} The value to be registered
+   * @param  {Array} Array of dependencies
    * @return {boolean}
    */
 
-  register = (name, type, dependencies) => {
-    this._logger("Registering", name);
-    
-    if (this._iocRegistry.has(name)) {
-      this._logger("Registration failed, name already in use")
-      return false;
-    } else {
-      this._iocRegistry.set(name, {type, dependencies})
-      return true;
-    }
+  registerModule = (name, type, dependencies) => {
+    this._register(name, type, dependencies, false);
+  };
+
+  /**
+   * @since 0.1
+   * @param  {string} The keyname of the class to be registered
+   * @param  {string} The class to be registered
+   * @param  {Array} Array of dependencies
+   * @return {boolean}
+   */
+
+  registerClass = (name, type, dependencies) => {
+    this._register(name, type, dependencies, true);
     
   };
 
   /**
+   * @since 0.1
    * @param  {string}
    * @return {{boolean}}
    */
@@ -46,6 +47,7 @@ class SimpleIoC {
   }
 
   /**
+   * @since 0.1
    * @param  {string}
    * @return {(Object|boolean)}
    */
@@ -54,7 +56,7 @@ class SimpleIoC {
     this._logger("Resolving", name);
     if (this._iocRegistry.has(name)) {
       const toResolve = this._iocRegistry.get(name)
-      if (this._isClass(toResolve.type)) {
+      if (toResolve.isClass && this._isClass(toResolve.type)) {
         const classInstance = this._injectDependencies(toResolve)
         return classInstance
       } else {
@@ -68,6 +70,7 @@ class SimpleIoC {
   }
 
   /**
+   * @since 0.1
    * @param  {string}
    * @return {boolean}
    */
@@ -106,7 +109,7 @@ class SimpleIoC {
   
   _isClass = function (resolvable) {
     // Check if element is an ECMA class
-    // TODO: Need to make this check more strict
+    // TODO: Need to make this check more strict - to be able to distinguish between constructor and regular function
     return typeof resolvable === 'function';
   }
 
@@ -115,13 +118,32 @@ class SimpleIoC {
    * @return {[type]}
    */
 
-  _injectDependencies = function (transient) {
-    const resolvedDeps = transient.dependencies ? transient.dependencies.map((dep) => this.resolve(dep)) : [];
-    if (transient.type) {
-      return new transient.type(...resolvedDeps);  
+  _injectDependencies = function (module) {
+    const resolvedDeps = module.dependencies ? module.dependencies.map((dep) => this.resolve(dep)) : [];
+    if (module.type) {
+      return new module.type(...resolvedDeps);  
     }
-    
   }
-}
 
-export default SimpleIoC;
+
+  /**
+   * @param  {string} The keyname to be registered
+   * @param  {string} The type to be registered
+   * @param  {Array} Array of dependencies
+   * @return {boolean}
+   */
+
+    _register = function (name, type, dependencies, isClass) {
+      this._logger("Registering", name);
+
+      if (this._iocRegistry.has(name)) {
+        this._logger("Registration failed, name already in use")
+        return false;
+      } else {
+        this._iocRegistry.set(name, {type, dependencies, isClass})
+        return true;
+      }
+    }
+  }
+
+  export default SimpleIoC;

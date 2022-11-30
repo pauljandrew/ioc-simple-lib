@@ -16,9 +16,3 @@ test('Can\'t remove unregistered name', () => {
 
   expect(sioc.remove('Test')).toBe(false);
 });
-
-// test('Can resolve classes to instances', () => {
-//   const sioc = new SimpleIoC();
-
-//   expect(sioc.remove('Test')).toBe(false);
-// });
