@@ -17,7 +17,7 @@ class SimpleIoC {
    */
 
   registerModule = (name, type, dependencies) => {
-    this._register(name, type, dependencies, false);
+    return this._register(name, type, dependencies, false);
   };
 
   /**
@@ -29,7 +29,7 @@ class SimpleIoC {
    */
 
   registerClass = (name, type, dependencies) => {
-    this._register(name, type, dependencies, true);
+    return this._register(name, type, dependencies, true);
     
   };
 

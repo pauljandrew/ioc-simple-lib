@@ -7,8 +7,8 @@ test('Runs without crashing', () => {
 test('Can\'t register duplicate name', () => {
   const sioc = new SimpleIoC();
 
-  expect(sioc.register('Test')).toBe(true);
-  expect(sioc.register('Test')).toBe(false);
+  expect(sioc.registerClass('Test')).toBe(true);
+  expect(sioc.registerClass('Test')).toBe(false);
 });
 
 test('Can\'t remove unregistered name', () => {
