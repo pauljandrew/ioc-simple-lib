@@ -1,8 +1,5 @@
-import "./index.css";
-
 class SimpleIoC {
   constructor(logLevel = 'INFO') {
-    console.log("IoC constructor loaded");
     this._iocRegistry = new Map();
     this._logLevel = logLevel;
   }

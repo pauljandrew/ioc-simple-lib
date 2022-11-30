@@ -1,14 +1,14 @@
  
 # IoC Simple Library
 
-## Main files to read
+## Main files to check
 
-- lib/index.js
-- demo/index.js
+- `lib/index.js`
+- `demo/index.js`
 
 ## Notes on code:
 
-- The library exposes 4 main public functions: registerClass, registerObject, resolve and remove
+- The library exposes 4 main public functions: `registerClass`, `registerModule`, `resolve` and `remove`
 
 - Only supports registering of classes and objects, no support for singletons or more advanced lifecycle management
 
